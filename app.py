@@ -1,5 +1,7 @@
 import os
 import logging
+import sys
+from pathlib import Path
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
@@ -9,6 +11,10 @@ from telegram.ext import (
     filters,
     ContextTypes
 )
+
+# Add parent directory to path
+sys.path.append(str(Path(__file__).parent))
+
 from utils.youtube_search import search_youtube
 from utils.youtube_downloader import download_video, download_audio
 from utils.helpers import format_duration, clean_filename
