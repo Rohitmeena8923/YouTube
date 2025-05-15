@@ -1,7 +1,12 @@
 import os
+import os
 import sys
 from pathlib import Path
 import logging
+
+# CRITICAL PATH FIX - Add before any other imports
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+
 from telegram import Update, InlineKeyboardButton, InlineKeyboardMarkup
 from telegram.ext import (
     Application,
@@ -12,15 +17,12 @@ from telegram.ext import (
     ContextTypes
 )
 
-# Fix path issues for Render
-current_dir = Path(__file__).parent.resolve()
-sys.path.insert(0, str(current_dir))
-
-# Import utils after path fix
+# Relative imports AFTER path modification
 from utils.youtube_search import search_youtube
 from utils.youtube_downloader import download_video, download_audio
 from utils.helpers import format_duration, clean_filename
 
+# [Rest of your original code remains unchanged...]
 # Configure logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
