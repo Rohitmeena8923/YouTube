@@ -22,7 +22,6 @@ from utils.youtube_search import search_youtube
 from utils.youtube_downloader import download_video, download_audio
 from utils.helpers import format_duration, clean_filename
 
-# [Rest of your original code remains unchanged...]
 # Configure logging
 logging.basicConfig(
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
