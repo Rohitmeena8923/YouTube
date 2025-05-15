@@ -1,7 +1,8 @@
+
 import os
 from pytube import YouTube
 from moviepy.editor import VideoFileClip
-from .helpers import clean_filename
+import logging
 
 def download_video(url, only_info=False):
     try:
@@ -9,9 +10,8 @@ def download_video(url, only_info=False):
         info = {
             'title': yt.title,
             'duration': yt.length,
-            'channel': yt.author,
             'thumbnail': yt.thumbnail_url,
-            'url': url
+            'channel': yt.author
         }
         
         if only_info:
@@ -19,18 +19,22 @@ def download_video(url, only_info=False):
             
         stream = yt.streams.filter(
             progressive=True,
-            file_extension='mp4'
-        ).order_by('resolution').desc().first()
+            file_extension='mp4',
+            resolution='720p'
+        ).first()
         
+        if not stream:
+            stream = yt.streams.get_highest_resolution()
+            
         os.makedirs("downloads", exist_ok=True)
-        filename = clean_filename(yt.title) + ".mp4"
+        filename = f"{yt.video_id}.mp4"
         filepath = os.path.join("downloads", filename)
-        
         stream.download(output_path="downloads", filename=filename)
         return filepath
         
     except Exception as e:
-        raise Exception(f"Download error: {str(e)}")
+        logging.error(f"Video download error: {e}")
+        raise Exception("Video download failed")
 
 def download_audio(url):
     try:
@@ -41,16 +45,15 @@ def download_audio(url):
         ).order_by('abr').desc().first()
         
         os.makedirs("downloads", exist_ok=True)
-        filename = clean_filename(yt.title) + ".mp4"
+        filename = f"{yt.video_id}.mp4"
         filepath = os.path.join("downloads", filename)
-        
         stream.download(output_path="downloads", filename=filename)
         
-        mp3_path = os.path.join("downloads", clean_filename(yt.title) + ".mp3")
+        mp3_path = os.path.join("downloads", f"{yt.video_id}.mp3")
         VideoFileClip(filepath).audio.write_audiofile(mp3_path)
-        
         os.remove(filepath)
         return mp3_path
         
     except Exception as e:
-        raise Exception(f"Audio error: {str(e)}")
+        logging.error(f"Audio download error: {e}")
+        raise Exception("Audio download failed")
