@@ -2,3 +2,4 @@ python-telegram-bot==20.3
 pytube==15.0.0
 moviepy==1.0.3
 python-dotenv==1.0.0
+requests==2.31.0
